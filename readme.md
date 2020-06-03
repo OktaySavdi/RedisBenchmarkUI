@@ -1,6 +1,6 @@
 We will create a simple application with dotnet-core
 
-we will use the images created here istio-example [RedisBenchmarkUI](https://github.com/OktaySavdi/RedisBenchmarkUI)
+We will use the images created here istio-example [RedisBenchmarkUI](https://github.com/OktaySavdi/RedisBenchmarkUI)
 
 
 #  Build
