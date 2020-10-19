@@ -1,20 +1,20 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-WORKDIR /app
-
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+# Build source code
+FROM registry.redhat.io/dotnet/dotnet-31-rhel7 AS build-env
+USER 0
+COPY . .
+RUN chown -R 1001:0 /opt/app-root && fix-permissions /opt/app-root
+USER 1001
+RUN /usr/libexec/s2i/assemble
+CMD /usr/libexec/s2i/run
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM registry.redhat.io/rhel8/dotnet-31-runtime
 
 ADD redis-benchmark /usr/local/bin/
 RUN chmod +x /usr/local/bin/redis-benchmark
 
-WORKDIR /app
-COPY --from=build-env /app/out .
+USER 0
+COPY --from=build-env /opt/app-root/app .
+RUN chown -R 1001:0 /opt/app-root && fix-permissions /opt/app-root
+USER 1001
 ENTRYPOINT ["dotnet", "RedisBenchmarkUI.dll"]
