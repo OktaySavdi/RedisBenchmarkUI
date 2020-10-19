@@ -9,7 +9,7 @@ docker build -t redisbenchmark -f Dockerfile .
 ```
 # Run
 ```ruby
-docker run -d -p 5000:80 --name myapp redisbenchmark
+docker run -d -p 5000:8080 --name myapp redisbenchmark
 ```
 # Call
 ```ruby
